@@ -1,50 +1,45 @@
 name: java-springboot-CI/CD
+
 on:
   workflow_dispatch:
+
 jobs:
-  prepare:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-  build:
-    needs: prepare
-    runs-on: ubuntu-latest
-    steps:   
-        - name: Build with Maven 
-          run: ls -alh
-        #   run: mvn clean package -DskipTests
-          
-        - name: Lint with mvn sonar
-          run: mvn sonar:sonar
-          
-        - name: Build Docker image
-          run: |
-            export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
-            docker build -t java-spring-app:$IMAGE_TAG .
-            
-        - name: Add git tag
-          run: git tag -a $IMAGE_TAG -m "Release $IMAGE_TAG"
-          env:
-            IMAGE_TAG: ${{ steps.build.outputs.IMAGE_TAG }}
-  push:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:     
-      - name: Push git tag
-        run: git push origin $IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ steps.build.outputs.IMAGE_TAG }}
-          
-      - name: Login to ECR
-        run: aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 1234567890.dkr.ecr.us-west-2.amazonaws.com
+              
+    - name: Build with Maven
+      run: mvn clean package -DskipTests
+      
+    - name: Lint with mvn sonar
+      run: mvn sonar:sonar
+      
+    - name: Build Docker image
+      run: |
+        export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
+        docker build -t java-spring-app:$IMAGE_TAG .
+               
+    - name: Add git tag
+      run: git tag -a $IMAGE_TAG -m "Release $IMAGE_TAG"
+      env:
+        IMAGE_TAG: ${{ steps.build.outputs.IMAGE_TAG }}
         
-      - name: Push Docker image to ECR
-        if: github.ref == 'refs/heads/master'
-        run: |
-          export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
-          docker tag java-spring-app:$IMAGE_TAG 1234567890.dkr.ecr.us-west-2.amazonaws.com/java-spring-app:$IMAGE_TAG
-          docker push 1234567890.dkr.ecr.us-west-2.amazonaws.com/java-spring-app:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ steps.build.outputs.IMAGE_TAG }}
+    - name: Push git tag
+      run: git push origin $IMAGE_TAG
+      env:
+        IMAGE_TAG: ${{ steps.build.outputs.IMAGE_TAG }}
+        
+    - name: Login to ECR
+      run: aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 1234567890.dkr.ecr.us-west-2.amazonaws.com
+      
+    - name: Push Docker image to ECR
+      if: github.ref == 'refs/heads/master'
+      run: |
+        export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
+        docker tag java-spring-app:$IMAGE_TAG 1234567890.dkr.ecr.us-west-2.amazonaws.com/java-spring-app:$IMAGE_TAG
+        docker push 1234567890.dkr.ecr.us-west-2.amazonaws.com/java-spring-app:$IMAGE_TAG
+      env:
+        IMAGE_TAG: ${{ steps.build.outputs.IMAGE_TAG }}
