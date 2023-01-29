@@ -22,8 +22,9 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     steps:   
-        - name: Build with Maven
-          run: mvn clean package -DskipTests
+        # - name: Build with Maven
+        #   run: ls -alh
+        #   run: mvn clean package -DskipTests
           
         - name: Lint with mvn sonar
           run: mvn sonar:sonar
