@@ -9,7 +9,7 @@ jobs:
     env:
       AWS_REGION: "eu-west-1"
       ECR_REPOSITORY: "java-app"
-      IMAGE_TAG: ${{GITHUB_SHA}}
+      IMAGE_TAG: ${{github.sha}}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
