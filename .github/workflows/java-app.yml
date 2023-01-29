@@ -21,7 +21,7 @@ jobs:
   build:
     needs: prepare
     runs-on: ubuntu-latest
-      steps:   
+    steps:   
         - name: Build with Maven
           run: mvn clean package -DskipTests
           
