@@ -36,7 +36,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}     
       run: |
         export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
-        docker build -t 190168171128.dkr.ecr.eu-west-1.amazonaws.com/java-app:$IMAGE_TAG
+        docker image build -t 190168171128.dkr.ecr.eu-west-1.amazonaws.com/java-app:$IMAGE_TAG .
         docker push 190168171128.dkr.ecr.eu-west-1.amazonaws.com/java-app:$IMAGE_TAG
     # - name: Login to ECR
     # export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
