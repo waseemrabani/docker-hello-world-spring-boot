@@ -8,10 +8,11 @@ jobs:
     env:
       AWS_REGION: "eu-west-1"
       ECR_REPOSITORY: "java-app"
-      ECS_CLUSTER: "demo-cluster"
-      ECS_SERVICE:  "java-app"  
-    
-    steps:  
+      ECS_CLUSTER: demo-cluster
+      ECS_SERVICE: "test"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
