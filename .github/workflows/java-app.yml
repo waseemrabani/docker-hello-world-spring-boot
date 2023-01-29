@@ -1,16 +1,6 @@
 name: java-springboot-CI/CD
 on:
   workflow_dispatch:
-    # inputs:
-    
-    #   build_base_tag_name:
-    #     description: 'stg - version of the base image for building'
-    #     required: false
-    #     default: 'latest'
-    #   stg_deploy_base_tag_name:
-    #     description: 'stg - The version of the base image for creating a deploy image'
-    #     required: false
-    #     default: 'latest'
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -22,8 +12,8 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     steps:   
-        # - name: Build with Maven
-        #   run: ls -alh
+        - name: Build with Maven 
+          run: ls -alh
         #   run: mvn clean package -DskipTests
           
         - name: Lint with mvn sonar
