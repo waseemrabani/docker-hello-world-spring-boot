@@ -30,8 +30,9 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{env.ECR_REPOSITORY}}
         #IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: "latest"
       run: |
-        export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
+        #export IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
